@@ -5,6 +5,7 @@
 #include "memlayout.h"
 #include "spinlock.h"
 #include "proc.h"
+#include <stddef.h>  // Para NULL
 
 uint64
 sys_exit(void)
@@ -90,4 +91,57 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+
+// NEW: Return parent's id
+uint64
+sys_getppid(void)
+{
+  return myproc()->parent->pid;
+}
+
+
+// NEW: Return ancestor's n id
+uint64
+sys_getancestor(void)
+{
+  int n;
+  argint(0, &n);
+  
+  // getancestor(0): (pid actual process)
+  if (n == 0) {
+    return myproc()->pid;
+  }
+
+  // getancestor(1): parent
+  else if (n == 1){
+
+    // There's no parent pid
+    if (myproc()->parent == NULL) {
+      return -1;
+    }
+
+    else {
+      return myproc()->parent->pid;
+    }
+  }
+
+  // getancestor(2): grandfather
+  else if (n == 2){
+
+    // not enough ancestors
+    if (myproc()->parent == NULL || myproc()->parent->parent == NULL){
+      return -1;
+    }
+
+    else {
+      return myproc()->parent->parent->pid;
+    }
+  }
+
+  // invalid argument
+  else {
+    return -1;
+  }
 }
