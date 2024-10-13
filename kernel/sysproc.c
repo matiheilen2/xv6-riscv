@@ -102,46 +102,15 @@ sys_getppid(void)
 }
 
 
-// NEW: Return ancestor's n id
+// Tarea 2
 uint64
-sys_getancestor(void)
+sys_getpriority(void)
 {
-  int n;
-  argint(0, &n);
-  
-  // getancestor(0): (pid actual process)
-  if (n == 0) {
-    return myproc()->pid;
-  }
+  return myproc()->priority;
+}
 
-  // getancestor(1): parent
-  else if (n == 1){
-
-    // There's no parent pid
-    if (myproc()->parent == NULL) {
-      return -1;
-    }
-
-    else {
-      return myproc()->parent->pid;
-    }
-  }
-
-  // getancestor(2): grandfather
-  else if (n == 2){
-
-    // not enough ancestors
-    if (myproc()->parent == NULL || myproc()->parent->parent == NULL){
-      return -1;
-    }
-
-    else {
-      return myproc()->parent->parent->pid;
-    }
-  }
-
-  // invalid argument
-  else {
-    return -1;
-  }
+uint64
+sys_getboost(void)
+{
+  return myproc()->boost;
 }
