@@ -463,10 +463,10 @@ scheduler(void)
       acquire(&p->lock);
       if(p->state == RUNNABLE) {
 
-        // Lógica de la prioridad
+        // Lógica de la prioridad y boost
         p->priority += p->boost;
 
-        // Variar boost respecto a valor de prioridad
+        // Variar boost respecto al valor de la prioridad
         if (p->priority >= 9) {
           p->boost = -1;
         }
